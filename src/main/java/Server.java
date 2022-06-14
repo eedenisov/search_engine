@@ -1,9 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -42,20 +40,13 @@ public class Server {
                      PrintWriter out = new PrintWriter(
                              new BufferedWriter(
                                      new OutputStreamWriter(clientSocket.getOutputStream())), true)) {
-                    String json = in.readLine();
 
-                    Request request = new Gson().fromJson(json, Request.class);
-                    if (request.word != null && !request.word.isEmpty()) {
-                        List<PageEntry> result = engine.search(request.word);
-                        String j = (String) listToJson(result);
+                    String answer = in.readLine();
+                    Request request = new Gson().fromJson(answer, Request.class);
+                    List<PageEntry> result = engine.search(request.word);
 
-                        String nameFile = "file.json";
-                        writeToJson(j, nameFile);
-
-                        out.println(j);
-                    } else {
-                        break;
-                    }
+                    String gsonStr = listToJson(result);
+                    out.println(gsonStr);
                 }
             }
         } catch (IOException e) {
@@ -63,24 +54,11 @@ public class Server {
         }
     }
 
-    public static <T> Object listToJson(List<T> list) {
+    public static String listToJson(List<PageEntry> list) {
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+        Gson gson = builder.setPrettyPrinting().create();
 
-        Type listT = new TypeToken<List<T>>() {
-        }.getType();
-
-        return gson.toJson(list, listT);
-    }
-
-    private static void writeToJson(String json, String jsonFile) {
-        try (FileWriter writer = new FileWriter(jsonFile)) {
-            writer.write(json);
-            writer.append("\n");
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return gson.toJson(list);
     }
 }
 

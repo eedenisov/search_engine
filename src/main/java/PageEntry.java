@@ -1,15 +1,19 @@
 import java.util.Objects;
 
 public class PageEntry implements Comparable<PageEntry> {
-    private final String pdfName;
-    private final int page;
-    private final int count;
+    private String pdfName;
+    private int page;
+    private int count;
 
 
     public PageEntry(String pdfName, int page, int count) {
         this.pdfName = pdfName;
         this.page = page;
         this.count = count;
+    }
+
+    public PageEntry() {
+
     }
 
     @Override
@@ -59,6 +63,6 @@ public class PageEntry implements Comparable<PageEntry> {
                 "pdfName='" + pdfName + '\'' +
                 ", page=" + page +
                 ", count=" + count +
-                "}";
+                '}';
     }
 }
