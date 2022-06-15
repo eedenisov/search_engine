@@ -18,8 +18,8 @@ public class BooleanSearchEngine implements SearchEngine {
         for (File filePdf : listOfPDFFiles) {
             var doc = new PdfDocument(new PdfReader(filePdf));
 
-            for (var i = 1; i <= doc.getNumberOfPages(); i++) {
-                var text = PdfTextExtractor.getTextFromPage(doc.getPage(i));
+            for (var numberPage = 1; numberPage <= doc.getNumberOfPages(); numberPage++) {
+                var text = PdfTextExtractor.getTextFromPage(doc.getPage(numberPage));
                 var words = text.split("\\P{IsAlphabetic}+");
 
                 for (var word : words) {
@@ -35,7 +35,7 @@ public class BooleanSearchEngine implements SearchEngine {
                     if (wordAndCount.get(wordToLowerCase) != null) {
                         count = wordAndCount.get(wordToLowerCase);
                         allWords.computeIfAbsent(wordToLowerCase, k -> new ArrayList<>()).add(
-                                new PageEntry(filePdf.getName(), i, count));
+                                new PageEntry(filePdf.getName(), numberPage, count));
                     }
                 }
                 wordAndCount.clear();

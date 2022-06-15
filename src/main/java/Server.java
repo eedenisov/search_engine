@@ -15,21 +15,6 @@ public class Server {
         engine = new BooleanSearchEngine(new File("pdfs"));
     }
 
-    public static class Request {
-        String word;
-
-        public Request(String word) {
-            this.word = word;
-        }
-
-        @Override
-        public String toString() {
-            return "Request{" +
-                    "word='" + word + '\'' +
-                    '}';
-        }
-    }
-
     public void startServer() {
         System.out.println("Сервер стартовал");
 
@@ -42,8 +27,7 @@ public class Server {
                                      new OutputStreamWriter(clientSocket.getOutputStream())), true)) {
 
                     String answer = in.readLine();
-                    Request request = new Gson().fromJson(answer, Request.class);
-                    List<PageEntry> result = engine.search(request.word);
+                    List<PageEntry> result = engine.search(answer);
 
                     String gsonStr = listToJson(result);
                     out.println(gsonStr);
